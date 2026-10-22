@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Consensus AI Research Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f6;--surf:#fff;--ink:#14213d;--mute:#52607a;--line:#d5dce6;--c:#b45309;--cs:#fdebd0;--hl:#fff3c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1729;--surf:#18223a;--ink:#e7ecf6;--mute:#9aa8c3;--line:#2b3956;--c:#fbbf6a;--cs:#4a3210;--hl:#4a4217}}
+:root[data-theme="dark"]{--bg:#0f1729;--surf:#18223a;--ink:#e7ecf6;--mute:#9aa8c3;--line:#2b3956;--c:#fbbf6a;--cs:#4a3210;--hl:#4a4217}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.75;font-size:17px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid #4338ca;outline-offset:2px}
+h1,h2{font-family:"Noto Serif Bengali",serif;line-height:1.35}
+h1{font-size:clamp(28px,5vw,42px);margin:40px 0 12px}
+h2{font-size:clamp(21px,3vw,26px);margin:0 0 4px}
+.lead{color:var(--mute);max-width:70ch;margin:0 0 14px}
+.top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
+.search{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surf);color:var(--ink);font:inherit}
+.prog{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mute)}
+.bar{flex:1;height:8px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--c);transition:width .3s}
+.th{border:1.5px solid var(--line);background:var(--surf);border-radius:12px;padding:6px 14px;font-weight:600}
+.rules{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin:0 0 10px}
+.rules ol{margin:8px 0 0;padding-left:22px}.rules li{margin-bottom:4px}
+.warn{margin:14px 0;padding:12px 18px;border-left:5px solid #b8264b;background:rgba(184,38,75,.12);border-radius:0 12px 12px 0}
+section{padding:22px 0}
+.ph{border-bottom:2px solid var(--c);padding-bottom:8px;margin-bottom:14px}
+.ph h2{color:var(--c)}
+.ph p{margin:0;color:var(--mute)}
+.card{background:var(--surf);border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card.done{border-color:var(--c)}
+.ch{display:flex;gap:12px;align-items:flex-start}
+.n{flex:none;min-width:40px;height:34px;padding:0 8px;border-radius:10px;background:var(--cs);color:var(--c);display:grid;place-items:center;font-weight:700;font-size:14px}
+.hd{display:block;font-weight:700;font-family:system-ui,sans-serif;font-size:16px}
+.pu{display:block;color:var(--mute);font-size:15px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0 52px}
+.acts button{border:1.5px solid var(--line);background:var(--surf);border-radius:10px;padding:5px 14px;font-size:14px;font-weight:600}
+.acts .cp{background:var(--c);color:var(--bg);border-color:var(--c)}
+.card.done .dn{background:var(--cs);border-color:var(--c);color:var(--c)}
+.pb{margin:12px 0 0 52px;padding:14px 16px;background:var(--bg);border:1px solid var(--line);border-radius:12px;font-family:system-ui,sans-serif;font-size:15px;line-height:1.65}
+.pb p{margin:0 0 10px}.pb ol{margin:0 0 10px;padding-left:22px}
+.empty{color:var(--mute)}
+footer{padding:26px 0 40px;color:var(--mute);font-size:14px;text-align:center}
+@media (max-width:640px){.acts,.pb{margin-left:0}}
+section{--c:hsl(var(--h,28) 70% 38%);--cs:hsl(var(--h,28) 75% 92%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) section{--c:hsl(var(--h,28) 85% 70%);--cs:hsl(var(--h,28) 40% 20%)}}
+:root[data-theme="dark"] section{--c:hsl(var(--h,28) 85% 70%);--cs:hsl(var(--h,28) 40% 20%)}
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:center;margin:28px 0 8px;padding:30px;border-radius:24px;background:linear-gradient(135deg,#7c2d12,#b45309 55%,#d97706);color:#fff;position:relative;overflow:hidden}
+.hero h1{margin:8px 0 14px;color:#fff}
+.badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:99px;padding:3px 14px;font-size:14px;font-weight:600}
+.hs{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rg{position:relative;width:84px;height:84px}
+.rg svg{width:84px;height:84px;transform:rotate(-90deg)}
+.rg b{position:absolute;inset:0;display:grid;place-items:center;font-size:18px}
+.go{background:#fff;color:#7c2d12;border:0;border-radius:12px;padding:10px 18px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s}
+.go:hover{transform:translateY(-2px)}
+.flow{width:100%;max-width:340px;justify-self:center}
+.flow .dash{stroke-dasharray:6 8;animation:mv 1.4s linear infinite}
+.flow circle.nd{animation:bl 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mv{to{stroke-dashoffset:-28}}
+@keyframes bl{50%{transform:scale(1.35)}}
+.chips{position:sticky;top:0;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px 2px;background:var(--bg);margin-bottom:6px}
+.chip{white-space:nowrap;border:1.5px solid var(--line);background:var(--surf);border-radius:99px;padding:5px 14px;font-size:14px;font-weight:600;transition:all .15s}
+.chip small{color:var(--mute);margin-left:4px}
+.chip:hover{border-color:var(--c)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}.chip.on small{color:inherit}
+.chip.ex{margin-left:auto;border-style:dashed}
+.pbar{height:6px;background:var(--line);border-radius:9px;margin-top:10px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--c);transition:width .4s}
+.card{transition:transform .15s,box-shadow .15s,border-color .15s;border-left:5px solid var(--c)}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.1)}
+.card.flash{animation:fl 1.6s}
+@keyframes fl{0%,60%{background:var(--hl)}}
+.pb{animation:pop .2s}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:99px;opacity:0;pointer-events:none;transition:all .25s;z-index:20;font-weight:600}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.cf{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:30;animation:fall 1.8s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.6}}
+@media (max-width:760px){.hero{grid-template-columns:1fr;padding:22px}.flow{max-width:240px;order:-1}}
+/* Luxury theme: ivory, onyx and gold */
+:root{--bg:#f6f1e6;--surf:#fffdf8;--ink:#16161d;--mute:#6b6454;--line:#e6dcc3;--hl:#f7ebc2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0b0f;--surf:#14151b;--ink:#f3ecd9;--mute:#a69f8d;--line:#2d2a20;--hl:#3a3216}}
+:root[data-theme="dark"]{--bg:#0a0b0f;--surf:#14151b;--ink:#f3ecd9;--mute:#a69f8d;--line:#2d2a20;--hl:#3a3216}
+section,:root{--c:#9a7420;--cs:#f4e9c9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) section,:root:not([data-theme="light"]){--c:#e2bf63;--cs:#2b2411}}
+:root[data-theme="dark"] section,:root[data-theme="dark"]{--c:#e2bf63;--cs:#2b2411}
+:focus-visible{outline-color:#c9a227}
+h1,h2{letter-spacing:.2px}
+.hero{background:radial-gradient(circle at 85% 10%,rgba(212,175,55,.28),transparent 45%),linear-gradient(135deg,#0a0b0f,#1b1810 55%,#33270f);border:1px solid rgba(212,175,55,.55);box-shadow:0 18px 50px rgba(20,16,4,.35),inset 0 0 0 1px rgba(255,235,170,.08)}
+.hero h1{background:linear-gradient(90deg,#f7e7b0,#d4af37 60%,#f1d98a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.badge{background:transparent;border:1px solid rgba(226,191,99,.7);color:#e8cf85;letter-spacing:1px;text-transform:uppercase;font-size:12px}
+#ring{stroke:#e2bf63}.rg b,#hdn{color:#f4e4b0}.hero .hs div{color:#f4e4b0}
+.flow .dash{stroke:#d4af37}.flow g{fill:#ecd48a}
+.go{background:linear-gradient(135deg,#f3dc8c,#d4af37 55%,#b8912c);color:#1a1405;box-shadow:0 6px 18px rgba(212,175,55,.35)}
+.rules{border-color:var(--line);box-shadow:0 2px 0 rgba(212,175,55,.35)}
+.warn{border-left-color:#7a1f2b;background:rgba(122,31,43,.1)}
+.search:focus{border-color:#c9a227;outline:none;box-shadow:0 0 0 3px rgba(201,162,39,.25)}
+.ph{border-bottom:1px solid var(--line);position:relative}
+.ph::after{content:"";position:absolute;left:0;bottom:-1px;width:90px;height:3px;background:linear-gradient(90deg,#d4af37,#f3dc8c)}
+.pbar i{background:linear-gradient(90deg,#b8912c,#f3dc8c)}
+.card{border:1px solid var(--line);border-left:4px solid #c9a227;box-shadow:0 1px 0 rgba(212,175,55,.18)}
+.card:hover{box-shadow:0 10px 28px rgba(150,115,30,.18);border-color:#c9a227}
+.card.done{border-left-color:#7a9a5b}
+.n{background:linear-gradient(135deg,#fbf1d0,#ecd48a);color:#5c4410;border:1px solid rgba(154,116,32,.35)}
+.acts .cp{background:linear-gradient(135deg,#f3dc8c,#d4af37);color:#1a1405;border-color:transparent}
+.acts button:hover{border-color:#c9a227}
+.card.done .dn{background:rgba(122,154,91,.18);border-color:#7a9a5b;color:#4d6b34}
+.chip.on{background:linear-gradient(135deg,#f3dc8c,#d4af37);color:#1a1405;border-color:transparent}
+.chip:hover{border-color:#c9a227}
+.chips{background:var(--bg)}
+.toast{background:#0a0b0f;color:#f4e4b0;border:1px solid #c9a227}
+.th{border-color:var(--line)}
+.pb{border-color:var(--line)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .n{background:linear-gradient(135deg,#3a2f12,#5a4719);color:#f3dc8c}:root:not([data-theme="light"]) .card.done .dn{color:#a7c98a}}
+:root[data-theme="dark"] .n{background:linear-gradient(135deg,#3a2f12,#5a4719);color:#f3dc8c}
+:root[data-theme="dark"] .card.done .dn{color:#a7c98a}
+@media (prefers-reduced-motion:reduce){.flow .dash,.flow circle.nd,.pb,.card.flash{animation:none}.card,.go{transition:none}*{transition:none!important}}
+</style></head>
+<body><main class="wrap">
+<header class="hero"><div><span class="badge">🔬 DR Research Toolkit</span><h1>Consensus AI Research Workflow</h1>
+<div class="hs"><div class="rg"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="8"/><circle id="ring" cx="40" cy="40" r="34" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="214" stroke-dashoffset="214" style="transition:stroke-dashoffset .5s"/></svg><b id="pct">0%</b></div>
+<div><div id="hdn" style="font-size:22px;font-weight:700"></div><div style="opacity:.85;font-size:14px">প্রম্পট সম্পন্ন</div></div>
+<button class="go" id="nxt"></button></div></div>
+<svg class="flow" viewBox="0 0 320 220" role="img" aria-label="৮ ধাপের গবেষণা পাইপলাইন"><path class="dash" d="M30 40H290M290 40C310 40 310 110 290 110H30M30 110C10 110 10 180 30 180H290" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="3"/><g fill="#fff"><circle class="nd" cx="30" cy="40" r="9"/><circle class="nd" cx="130" cy="40" r="9" style="animation-delay:.3s"/><circle class="nd" cx="230" cy="40" r="9" style="animation-delay:.6s"/><circle class="nd" cx="290" cy="75" r="9" style="animation-delay:.9s"/><circle class="nd" cx="200" cy="110" r="9" style="animation-delay:1.2s"/><circle class="nd" cx="100" cy="110" r="9" style="animation-delay:1.5s"/><circle class="nd" cx="30" cy="145" r="9" style="animation-delay:1.8s"/><circle class="nd" cx="130" cy="180" r="9" style="animation-delay:2.1s"/><circle class="nd" cx="290" cy="180" r="11"/></g></svg></header>
+<p class="lead">Diabetic Retinopathy (DR) Detection with Explainable Deep Learning। গবেষণার বিষয়: “Comparative Analysis of Deep Learning Architectures for Diabetic Retinopathy Stages Detection with Explainability”। এখানে ৮টি ফেজ, ২১টি প্রম্পট ও ২টি মাস্টার প্রম্পট একসাথে সাজানো আছে। প্রতিটি প্রম্পট Copy Prompt চেপে কপি করে Consensus AI-তে পেস্ট করুন।</p>
+<div class="rules"><b>Consensus AI ব্যবহারের নিয়ম</b><ol>
+<li>একবারে সব প্রম্পট চালাবেন না। Phase 1 থেকে শুরু করে ফলাফল যাচাই করে পরের ফেজে যান।</li>
+<li>Consensus-এর সারাংশ মূল পেপারের বিকল্প নয়। শিরোনাম, লেখক, সাল, DOI ও দাবি মূল পেপারে মিলিয়ে নিন।</li>
+<li>রিসার্চ গ্যাপকে হাইপোথিসিস ধরুন। বৃহত্তর সাহিত্যে যাচাই না হওয়া পর্যন্ত নতুনত্ব দাবি করবেন না।</li>
+<li>পরীক্ষার ফলাফল বানাবেন না। মডেলের আসল ফলাফল আপনার নিজের চালানো এক্সপেরিমেন্ট থেকেই আসবে।</li>
+<li>শুধু মডেল তুলনা বা Grad-CAM দেখানোই নিজে থেকে নতুন অবদান প্রমাণ করে না।</li>
+<li>মডেল ট্রেনিং শুরুর আগে সুপারভাইজারের সাথে স্কোপ, রিসার্চ প্রশ্ন, ডেটাসেট ও মেথডোলজি অনুমোদন করান।</li>
+<li>সার্চ টার্ম, পেপার বাছাইয়ের সিদ্ধান্ত, ডেটা স্প্লিট, কনফিগারেশন, সিড ও ফলাফলের লগ রাখুন।</li>
+</ol></div>
+<div class="warn">সতর্কতা: কোনো রিসার্চ গ্যাপ ম্যাট্রিক্সের ঘর ফাঁকা থাকা, কোনো পেপারে পদ্ধতি না থাকা বা সার্চে ফলাফল না পাওয়া, এগুলোর কোনোটিই একা নতুনত্বের প্রমাণ নয়।</div>
+<div class="top">
+<input class="search" id="q" type="search" placeholder="প্রম্পট খুঁজুন, যেমন: Grad-CAM, dataset, novelty" aria-label="প্রম্পট খুঁজুন">
+<div class="prog"><span id="ptxt"></span><div class="bar"><i id="pbar"></i></div></div>
+<button class="th" id="theme" aria-label="থিম বদলান">◐ থিম</button>
+</div>
+<div class="chips" id="chips"></div><div id="out"></div><div class="toast" id="toast" role="status"></div>
+</main>
+<footer class="wrap">এই গাইড একটি শেখার সহায়ক। যেকোনো দাবি ব্যবহারের আগে মূল পেপারে যাচাই করুন।</footer>
+<script>
+var R="Do not invent papers, citations, DOIs, numerical results or novelty claims. Mark unverified information explicitly and cite traceable sources.";
+var D=[
+{p:"Phase 1 — Research Scope and Topic Lock",bn:"গবেষণার বিষয় সংকীর্ণ করা, বিদ্যমান দিকগুলো বোঝা এবং করা সম্ভব এমন রিসার্চ প্রশ্ন বাছাই করা।",c:[
+{id:"1A",h:"Prompt 1A — Define the Research Scope",bn:"স্কোপ, ডেটাসেট, আর্কিটেকচার ও XAI-র দিক ঠিক করা এবং ৩–৫টি প্রার্থী রিসার্চ প্রশ্ন বের করা",
+i:"I am an undergraduate CSE student planning a research project titled “Comparative Analysis of Deep Learning Architectures for Diabetic Retinopathy Stages Detection with Explainability.” Help me define a rigorous, feasible and academically defensible research scope. Prioritize peer-reviewed work from 2020–2026 plus foundational earlier work. Investigate:",
+q:["DR severity grading from retinal fundus images.","Architectures: conventional CNNs, transfer learning, EfficientNet, ResNet, DenseNet and others supported by the literature.","XAI methods: Grad-CAM, Grad-CAM++, SHAP, LIME and others.","Datasets, grading schemes, preprocessing, class-imbalance strategies, metrics and validation protocols.","Recurring limitations, contradictory findings and promising directions."],
+o:"Output: A. Refined research scope. B. Main research directions. C. Datasets and evaluation approaches. D. 3–5 candidate research questions with importance, feasibility, data, compute and evaluation needs. E. Feasibility comparison. F. Next steps and questions requiring supervisor approval. Distinguish established findings, author-reported limitations, your inferences and unverified hypotheses. "+R+" Do not claim novelty just because you found no paper on a topic."}]},
+{p:"Phase 2 — Structured Literature Search",bn:"প্রাসঙ্গিক পেপার সংগ্রহ, সার্চ প্রক্রিয়া নথিভুক্ত করা এবং সাহিত্যকে থিমে ভাগ করা।",c:[
+{id:"2A",h:"Prompt 2A — Search and Organize the Literature",bn:"থিম অনুযায়ী পেপার খোঁজা এবং পুনরুৎপাদনযোগ্য সার্চ প্ল্যান তৈরি করা",
+i:"Conduct a structured literature search (2020–2026, plus foundational studies) for my DR research topic. Cover these themes:",
+q:["DR severity classification using fundus images.","CNN-based classification and transfer learning.","Comparisons of EfficientNet, ResNet, DenseNet and others.","Explainability: Grad-CAM, Grad-CAM++, SHAP, LIME.","Class imbalance, rare severity classes, data leakage and evaluation bias.","External validation, cross-dataset generalization and robustness.","Explanation quality: localization, faithfulness, stability, clinical relevance.","Reproducibility, statistical uncertainty and fair model comparison."],
+o:"For each paper report: title, authors, year, venue, DOI/URL, dataset, label scheme, architecture, XAI method, metrics, exact reported values, author-reported limitations and relevance. Organize by theme, year, dataset, architecture, XAI method and validation protocol. Give a reproducible search plan (Boolean terms, databases actually consulted, inclusion and exclusion criteria, duplicate removal, screening, citation chasing) and state which steps were actually performed versus only recommended. Do not call the review systematic or exhaustive unless the process justifies it. "+R}]},
+{p:"Phase 3 — Literature Matrix and Evidence Extraction",bn:"প্রতিটি পেপার থেকে তুলনাযোগ্য তথ্য বের করা, যাতে গ্যাপ খোঁজার সময় অনুমানের ওপর নির্ভর করতে না হয়।",c:[
+{id:"3A",h:"Prompt 3A — Build a Structured Literature Matrix",bn:"২৬টি কলামের বিস্তারিত সাহিত্য ম্যাট্রিক্স তৈরি করা",
+i:"Using the relevant papers identified, build a detailed literature matrix for DR severity classification with explainable deep learning. One row per unique study. Columns:",
+q:["Paper ID, full citation, year, venue, DOI or link.","Research objective; dataset name, source, size, number of patients.","DR grading scheme, class definitions, number of classes.","Architecture and pretrained weights; preprocessing; image resolution.","Train/validation/test split strategy; patient-level or image-level splitting; class-imbalance handling; training configuration.","Evaluation metrics and exact reported numerical results.","Explainability technique and how explanation quality was evaluated.","External validation or cross-dataset evaluation.","Author-reported limitations, potential research opportunities, verification status."],
+o:"Use “Not reported” or “Not verified” where needed. Record page, table, figure or section for key facts. Do not rank models from different papers when datasets, splits, preprocessing or protocols differ. Flag duplicate publications and overlapping datasets. After the matrix: A. recurring experimental designs, B. differences preventing fair comparison, C. underreported information, D. evidence relevant to candidate gaps, E. papers needing manual verification. Keep author-reported limitations, your observed limitations, research opportunities and confirmed novelty clearly separate. "+R}]},
+{p:"Phase 4 — Research Gap Identification and Novelty Verification",bn:"পুরো গবেষণার সবচেয়ে গুরুত্বপূর্ণ ধাপ। এখানে ১০টি রিসার্চ গ্যাপ প্রম্পট একত্র করা হয়েছে।",c:[
+{id:"4A",h:"Prompt 4A — Broad Research Gap Discovery",bn:"সম্ভাব্য রিসার্চ গ্যাপ খোঁজা এবং প্রতিটিকে প্রাথমিক হিসেবে চিহ্নিত করা",
+i:"Analyze the literature and identify potential research gaps in DL-based DR severity classification using fundus images. Focus on:",
+q:["Model architecture comparisons and fairness of experimental protocols.","Class-wise performance and minority-class detection.","Dataset quality, imbalance and grading consistency.","Generalization across datasets and imaging conditions.","Explainability quality, reproducibility, statistical uncertainty and clinical relevance."],
+o:"For each gap: state it precisely, cite supporting studies, say what is already addressed and what remains unresolved, cite contradictory evidence, explain why it matters, suggest a testable research question and feasible methodology, assess distinctness from existing work and list further searches needed before claiming novelty. Do not treat an empty matrix cell as proof of a gap. Do not assume a known architecture plus Grad-CAM is novel. Label every gap preliminary until verified."},
+{id:"4B",h:"Prompt 4B — Research Gap Matrix",bn:"১৭টি মাত্রায় প্রমাণভিত্তিক রিসার্চ গ্যাপ ম্যাট্রিক্স",
+i:"Construct an evidence-based research gap matrix for DR severity classification with explainable deep learning. Compare the literature across these dimensions:",
+q:["Objective, dataset, grading scheme, architecture family.","Preprocessing, resolution, training and optimization protocol.","Class-imbalance handling, data splitting and leakage prevention.","Metrics, statistical testing, external validation, cross-dataset generalization.","XAI technique, explanation-quality evaluation, robustness and failure-case analysis.","Reproducibility, code availability, clinical relevance and expert evaluation."],
+o:"For each dimension report what has been studied, supporting papers, common approaches, missing or inadequate comparisons, conflicts, underreported issues and gaps worth investigating. Distinguish genuine unresolved problems from missing reporting, differences in design and gaps in the retrieved collection. Provide a prioritized matrix with citations, significance and feasibility."},
+{id:"4C",h:"Prompt 4C — Methodological Limitations and Weaknesses",bn:"ডেটা লিকেজ, পক্ষপাত ও অন্যান্য পদ্ধতিগত দুর্বলতা মূল্যায়ন",
+i:"Critically evaluate whether reviewed DR classification studies adequately address:",
+q:["Patient-level splitting, leakage and duplicate or near-duplicate images.","Class imbalance, minority-class performance and selection bias.","Image-quality variation and preprocessing artifacts.","Hyperparameter and model-selection bias; fairness of comparisons; baseline choice.","Multiple seeds, confidence intervals, significance testing, calibration.","External validation, distribution shift and reporting of failure cases."],
+o:"For each weakness: cite studies, state exactly what the paper reports, separate author admissions from your critique, explain the likely effect on results, say whether it is widespread, name studies that address it and propose a feasible fix for an undergraduate project. Do not accuse a study of leakage or bias without evidence; classify as unreported or unclear instead."},
+{id:"4D",h:"Prompt 4D — Explainability-Specific Research Gaps",bn:"Grad-CAM, SHAP ইত্যাদির ব্যাখ্যার মান, বিশ্বাসযোগ্যতা ও সীমাবদ্ধতা বিশ্লেষণ",
+i:"Critically review XAI methods (Grad-CAM, Grad-CAM++, Integrated Gradients, LIME, SHAP, others) in DR classification across these dimensions:",
+q:["Visual interpretability and localization of clinically relevant lesions.","Faithfulness to the model’s decision process; stability under reruns or perturbations.","Consistency across architectures and across DR severity classes.","Explanations on misclassified images; robustness to image quality and distribution shift.","Quantitative versus qualitative evaluation; comparison with expert annotations.","Human interpretability, clinical usefulness and limits of post-hoc heatmaps."],
+o:"For each dimension identify papers, methods already used, what remains unresolved, whether the limitation is demonstrated or only hypothesized, contradicting studies and a measurable research question with an evaluation protocol. Assess whether applying Grad-CAM to several architectures without validating explanation quality is a strong enough contribution. Do not equate an attractive heatmap with a faithful, clinically correct explanation."},
+{id:"4E",h:"Prompt 4E — Dataset, Generalization and External Validation Gaps",bn:"EyePACS, APTOS, Messidor, DDR, IDRiD ইত্যাদি ডেটাসেটের বৈশিষ্ট্য ও বাইরের যাচাইয়ের সুযোগ",
+i:"Analyze dataset-related gaps using datasets such as EyePACS, APTOS 2019, Messidor, Messidor-2, DDR and IDRiD. For each dataset verify rather than assume:",
+q:["Source, intended use, number of images and patients, grading scheme, class distribution.","Image quality, acquisition characteristics and annotation process.","Availability, access restrictions, licensing, known limitations, suitability for external validation."],
+o:"Then analyze reliance on a single dataset, independent evaluation, grading-scheme differences, generalization across cameras and populations, class imbalance, patient-level separation, independence of external test sets, dataset shift and calibration. For each gap give supporting papers, contradictory evidence, feasibility and a validation protocol. Do not assume two datasets are independent because of different names; verify overlap, label compatibility, access and licensing."},
+{id:"4F",h:"Prompt 4F — Contradictory Findings and Disagreement Analysis",bn:"বিভিন্ন পেপারের পরস্পরবিরোধী সিদ্ধান্ত বিশ্লেষণ",
+i:"Identify contradictory findings in DL-based DR classification and explainability, such as differing conclusions about:",
+q:["The best-performing architecture and the value of transfer learning.","Effects of preprocessing and of class-imbalance methods.","Accuracy versus minority-class sensitivity.","Reliability of Grad-CAM and other XAI methods.","Cross-dataset generalization, external validation and clinical relevance of explanations."],
+o:"For each contradiction cite the studies, report findings accurately, compare datasets, grading schemes, splits, preprocessing, architectures, training and metrics, decide whether it is a true contradiction or a difference in conditions, list evidence-supported explanations and uncertainty, and propose a controlled experiment. Do not force consensus or infer causation from comparisons across unrelated studies."},
+{id:"4G",h:"Prompt 4G — Synthesize Limitations and Future Work",bn:"পেপারগুলোর সীমাবদ্ধতা ও ভবিষ্যৎ কাজের সংশ্লেষণ",
+i:"Synthesize the limitations and future-work sections of the reviewed literature across papers. Group them into:",
+q:["Dataset and annotation limitations; class imbalance and rare classes.","Architecture comparison fairness; data leakage and validation.","Generalization and robustness; explainability quality.","Statistical analysis and reproducibility; clinical and deployment limits; computational constraints."],
+o:"For each group identify which papers report the issue, separate author-reported from independently observed weaknesses, note repeated patterns and exceptions, say whether the problem is unresolved, compare suggested future work with published work, develop candidate research questions and assess feasibility for an undergraduate CSE project. Repetition across papers is not automatic proof of novelty."},
+{id:"4H",h:"Prompt 4H — Verify Novelty of Candidate Gaps",bn:"প্রতিটি প্রার্থী গ্যাপের নতুনত্ব সমালোচকের দৃষ্টিতে যাচাই করা",
+i:"Act as a critical research reviewer. For each candidate gap, run targeted literature verification to find:",
+q:["Closely related papers and studies with similar research questions.","Studies using the same datasets and architecture families or comparing several models under similar protocols.","Studies combining architecture comparison with Grad-CAM or other XAI, and those evaluating explanations quantitatively.","Studies with external validation, and recent publications that may already cover the contribution."],
+o:"For each gap: state the novelty claim, find the closest existing work, compare objectives, methods, datasets and findings, explain what is genuinely different, list evidence weakening the claim, classify the contribution (new method, new evaluation, controlled comparison, replication or application), recommend how to narrow it and state further verification required. Do not claim “first” or “no previous study” without strong evidence. If novelty cannot be established, say so."},
+{id:"4I",h:"Prompt 4I — Collection-Specific Gap versus Whole-Field Gap",bn:"নিজের পেপার সংগ্রহের গ্যাপ এবং পুরো ক্ষেত্রের গ্যাপ আলাদা করা",
+i:"I have a collection of DR deep learning and XAI papers. Analyze the collection, then separately test the findings against the broader literature.",
+q:["Collection analysis: topics covered, gap matrix, repeated limitations, missing comparisons, missing information versus genuine unresolved problems.","Broader verification: related work outside the collection, recent and foundational studies, alternative terminology, adjacent areas, evidence contradicting each gap."],
+o:"For every candidate gap give two separate conclusions: A. evidence within the supplied collection, B. evidence from the broader literature. Explain how the collection may be biased by selection criteria, dates, databases or focus. Do not generalize the absence of a topic in the collection to the whole field."},
+{id:"4J",h:"Prompt 4J — Prioritize and Select the Strongest Research Gap",bn:"১২টি মানদণ্ডে সেরা গ্যাপ ও বিকল্প নির্বাচন",
+i:"Using the verified literature matrix and candidate gaps, prioritize research directions for an undergraduate CSE project. Evaluate each on:",
+q:["Strength of evidence, significance, distinctness from existing work.","Feasibility with public data, computational requirements, time and complexity.","Availability of metrics, reproducibility, possibility of external validation.","Contribution to understanding performance or explanation quality.","Risks of leakage, bias and invalid comparisons; dependence on unavailable expert annotations."],
+o:"Give a comparison table with qualitative ratings and justification; no numerical scores without explaining the rules. Recommend the strongest gap, one or two backups, a refined research question for each, a testable hypothesis, a feasible design, minimum evidence needed, risks with mitigation and questions for the supervisor. Do not choose a gap merely because it sounds novel or is easy. Keep the recommendation provisional until original papers are verified."}]},
+{p:"Phase 5 — Research Methodology and Experimental Design",bn:"গ্যাপ বাছাইয়ের পর ঠিক কী এক্সপেরিমেন্ট হবে তা নির্ধারণ করা: মডেল, ডেটাসেট, স্প্লিট, মেট্রিক, XAI ও ন্যায্য তুলনার নিয়ম।",c:[
+{id:"5A",h:"Prompt 5A — Design a Rigorous Methodology",bn:"পুনরুৎপাদনযোগ্য ও ন্যূনতম বিজ্ঞানসম্মত এক্সপেরিমেন্ট ডিজাইন",
+i:"Based on the verified gap and approved research question, develop a rigorous, reproducible methodology. Design the smallest scientifically defensible study. Cover:",
+q:["Dataset selection (access, license, labels, counts, patient IDs, class distribution, overlap).","Target definition: grading scheme, label mapping, binary or multiclass, handling of ungradable images.","Data preparation: quality checks, resizing, normalization, training-only augmentation, duplicate detection, leakage prevention.","Splitting: patient-level when possible, separate final test set, external dataset use.","Model selection: justified baselines, pretrained weights, constant training conditions.","Training protocol: optimizer, loss, batch size, early stopping, tuning bounds, imbalance handling, seeds, software versions.","Evaluation: accuracy, macro-F1, per-class metrics, confusion matrix, ROC-AUC, confidence intervals, calibration.","Explainability: methods, target layers, faithfulness, stability, localization tests; no clinical-validity claims.","Error analysis, reproducibility, ethics and reporting."],
+o:"Deliver: A. step-by-step protocol, B. table of variables, controls, metrics and expected evidence, C. fair model-comparison plan, D. explainability evaluation plan, E. reproducibility checklist, F. decisions requiring supervisor approval. Do not fabricate results or guarantee performance. Distinguish recommendations from requirements imposed by dataset or venue."}]},
+{p:"Phase 6 — Experiments, Results and Explainability Analysis",bn:"আসল এক্সপেরিমেন্টের ফলাফল বিশ্লেষণ। ফলাফল আসবে আপনার নিজের Python, PyTorch বা TensorFlow রান থেকে।",c:[
+{id:"6A",h:"Prompt 6A — Analyze Actual Experimental Results",bn:"আপনার দেওয়া আসল আউটপুট থেকে ফলাফল, ত্রুটি ও XAI বিশ্লেষণ",
+i:"I will provide actual experimental outputs: dataset statistics, training logs, metrics, confusion matrices, predictions and XAI visualizations. Analyze only the evidence I provide. Evaluate:",
+q:["Dataset: size, class distribution, split strategy, quality issues, leakage concerns.","Performance: accuracy, macro-F1, per-class metrics, confusion matrices, ROC-AUC, uncertainty.","Fair comparison: comparable splits, preprocessing and tuning budgets; computational cost.","Training behavior: curves, over- or underfitting, instability, imbalance effects, run variance.","Explainability: cautious reading of heatmaps, correct versus incorrect cases, dependence on irrelevant regions, measured explanation metrics.","Error analysis, research implications, inconclusive findings and limitations."],
+o:"Output: A. results summary, B. model-comparison table, C. per-class analysis, D. explainability analysis, E. failure cases, F. statistical and methodological limitations, G. discussion points, H. recommended additional experiments. Never invent missing results or present hypothetical results as findings. Do not use the test set repeatedly for model selection. Make no unsupported clinical-readiness claims."}]},
+{p:"Phase 7 — Research Manuscript Writing",bn:"যাচাইকৃত সাহিত্য, নথিভুক্ত মেথডোলজি ও আসল ফলাফলের ভিত্তিতে পেপার লেখা।",c:[
+{id:"7A",h:"Prompt 7A — Write the Research Manuscript",bn:"শিরোনাম থেকে রেফারেন্স পর্যন্ত ১৯টি অংশে পাণ্ডুলিপি লেখা",
+i:"Help me prepare an academic manuscript using the verified literature, approved research question, documented methodology and actual results I provide. Include:",
+q:["Title, abstract, keywords, introduction, background and related work.","Research gap, motivation, objectives and questions.","Materials and methods, dataset, preprocessing and splitting, models and training, metrics, explainability.","Results, discussion, limitations, ethics and data governance, conclusion, references."],
+o:"Use a formal, evidence-based style and the target venue’s structure. Use exact values from my results and keep them consistent across text, tables and figures. Report negative and inconclusive results honestly. Mark missing information with placeholders. Avoid unsupported claims of novelty, superiority, clinical usefulness or generalization. First identify missing information, then draft only sections the evidence supports, and audit consistency before finalizing. "+R},
+{id:"7B",h:"Prompt 7B — Research Evidence and Citation Audit",bn:"সাইটেশন, প্রমাণ ও অভ্যন্তরীণ সামঞ্জস্য যাচাই",
+i:"Audit the draft manuscript for evidence quality, citation accuracy and internal consistency. For every literature-based claim:",
+q:["Identify the supporting citation and check that it supports the claim.","Verify title, authors, year, venue and DOI; separate primary from secondary sources.","Flag unsupported, overly broad or uncited statements and unverifiable citations.","Check numerical values against sources and against my experimental outputs; check tables, figures, abstract and conclusion for consistency."],
+o:"Produce a table of issues, evidence, severity and recommended corrections. Do not claim every citation is verified unless each was actually checked. Do not replace an uncertain citation with an invented one."}]},
+{p:"Phase 8 — Final Review and Publication Readiness",bn:"জমা দেওয়ার আগে রিভিউয়ারের দৃষ্টিতে সমালোচনামূলক মূল্যায়ন।",c:[
+{id:"8A",h:"Prompt 8A — Simulate a Rigorous Peer Review",bn:"২১টি ক্ষেত্রে সমালোচনামূলক কিন্তু গঠনমূলক পিয়ার রিভিউ",
+i:"Act as a critical but constructive peer reviewer for my DR deep learning and XAI manuscript. Review motivation, research question, related work, gap argument, novelty claim, datasets, splitting, comparison fairness, training, metrics, imbalance, statistics, external validation, explainability, error analysis, figures, citations, writing, ethics, limitations and venue compliance. Classify each issue as:",
+q:["Critical: threatens validity or the central contribution.","Major: materially weakens evidence or interpretation.","Minor: needs correction but is not fundamental.","Optional: may improve clarity or impact."],
+o:"For every issue point to the section, table or figure, explain why it matters and recommend a concrete fix. Provide: A. overall assessment, B. strengths, C. critical issues, D. major revisions, E. minor revisions, F. missing experiments if genuinely necessary, G. prioritized revision checklist, H. provisional submission-readiness recommendation. Do not guarantee acceptance, and do not allege plagiarism, ethics violations or citation errors without evidence."},
+{id:"8B",h:"Prompt 8B — Final Submission Checklist",bn:"জমা দেওয়ার আগের চূড়ান্ত চেকলিস্ট",
+i:"Create a final submission-readiness checklist for my DR paper. Check that:",
+q:["The research question is precise and answered; the gap is supported; novelty claims are qualified.","Datasets, labels and licensing are documented; splits are transparent; leakage risks assessed.","Comparisons are defensible; imbalance is handled; metrics are correct; uncertainty is reported.","XAI limitations are explained and explanation quality is not inferred from visual appeal.","Results match actual logs; failure cases and limitations are disclosed; citations are verified as claimed.","Abstract and conclusion do not overstate; ethics, privacy and reproducibility are addressed; formatting follows the venue."],
+o:"Classify every item as: Complete (with evidence), Incomplete (with required action), Not applicable (with justification) or Unable to verify (with missing evidence). End with the highest-priority actions before submission. Do not mark an item complete merely because the manuscript mentions it."}]},
+{p:"Additional Master Prompts — Researcher-Level Quality Control",bn:"এগুলো আগের ৮টি ফেজের বিকল্প নয়। পুরো কাজের মধ্যে প্রয়োজন অনুযায়ী ব্যবহার করুন।",c:[
+{id:"M9",h:"Prompt 9 — Critical Research Mentor",bn:"আপনার গবেষণা পরিকল্পনাকে নির্দ্বিধায় প্রশ্ন করা মেন্টর",
+i:"Act as a critical research mentor in medical image analysis, deep learning and XAI. Evaluate my plan without automatically agreeing with my assumptions. Identify:",
+q:["Ambiguous research questions and unsupported novelty claims.","Weak experimental designs, unnecessary complexity and missing baselines.","Inadequate metrics, potential leakage and misleading comparisons.","Weak explainability validation and conclusions the experiments cannot support."],
+o:"For each concern give the scientific reason, evidence needed and a practical improvement. Separate essential requirements from optional improvements. Recommend a feasible, defensible study rather than maximizing the number of models. Ask for missing information that materially affects the advice. Do not invent literature findings or results."},
+{id:"M10",h:"Prompt 10 — Evidence-Based Decision Log",bn:"প্রতিটি গবেষণা সিদ্ধান্তের প্রমাণভিত্তিক লগ রাখা",
+i:"Help me maintain a research decision log. For each important decision record:",
+q:["Decision ID, decision to be made, available options.","Literature evidence, supporting and contradicting sources.","Methodological implications, data and compute needs, risks.","Selected option with justification; rejected alternatives and reasons.","Supervisor approval needed, verification status, date and version."],
+o:"Track decisions on research questions, datasets, grading schemes, architectures, preprocessing, splitting, metrics, XAI methods and statistics. Do not silently change an earlier decision; explain what changed and why. Distinguish evidence-based decisions from provisional assumptions."}]}];
+var done={},open={};
+try{done=JSON.parse(localStorage.getItem("cn1")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("cn1",JSON.stringify(done))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+var all=[];D.forEach(function(p){p.c.forEach(function(c){all.push(c)})});
+function find(id){return all.filter(function(c){return c.id===id})[0]}
+function txt(c){return c.i+"\n\n"+c.q.map(function(x,j){return (j+1)+". "+x}).join("\n")+"\n\n"+c.o}
+function body(c){return '<div class="pb"><p>'+c.i+'</p><ol>'+c.q.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ol><p>'+c.o+'</p></div>'}
+function copy(s,b){var ok=function(){var o=b.textContent;b.textContent="Copied ✓";setTimeout(function(){b.textContent=o},1600)};
+function fb(){var t=document.createElement("textarea");t.value=s;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(x){b.textContent="Copy হয়নি"}document.body.removeChild(t)}
+if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(ok,fb);else fb()}
+function render(){
+var q=$("q").value.trim().toLowerCase(),h="",dn=0;
+all.forEach(function(c){if(done[c.id])dn++});
+D.forEach(function(p){var s="";
+p.c.forEach(function(c){if(q&&(c.h+c.bn+txt(c)).toLowerCase().indexOf(q)<0)return;
+var o=!!open[c.id];
+s+='<div class="card'+(done[c.id]?" done":"")+'" id="c-'+c.id+'"><div class="ch"><span class="n">'+c.id.replace("M","P")+'</span><div><b class="hd">'+c.h+'</b><span class="pu">'+c.bn+'</span></div></div><div class="acts"><button data-a="o" aria-expanded="'+o+'">'+(o?"প্রশ্নগুলো লুকান":"প্রশ্নগুলো দেখুন")+'</button><button class="cp" data-a="c">Copy Prompt</button><button class="dn" data-a="d" aria-pressed="'+!!done[c.id]+'">'+(done[c.id]?"✓ সম্পন্ন":"সম্পন্ন করুন")+'</button></div>'+(o?body(c):"")+'</div>'});
+if(s)h+='<section><div class="ph"><h2>'+p.p+'</h2><p>'+p.bn+'</p></div>'+s+'</section>'});
+$("out").innerHTML=h||'<p class="empty">কোনো প্রম্পট মেলেনি। অন্য শব্দ দিয়ে খুঁজুন।</p>';
+$("ptxt").textContent=dn+"/"+all.length+" সম্পন্ন";$("pbar").style.width=(dn/all.length*100)+"%"}
+$("q").oninput=render;
+$("out").onclick=function(e){var b=e.target.closest("button[data-a]");if(!b)return;var id=b.closest(".card").id.slice(2),a=b.dataset.a;
+if(a==="c"){copy(txt(find(id)),b);return}
+if(a==="o")open[id]=!open[id];else{done[id]=!done[id];save()}
+render();var f=document.querySelector('#c-'+id+' [data-a="'+a+'"]');if(f)f.focus()};
+$("theme").onclick=function(){var r=document.documentElement,d=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=d?"light":"dark"};
+var pf="all",ex=false,prevC={},HUE=[28,200,262,340,150,40,290,180,12];
+function pshort(i){return i<8?"Phase "+(i+1):"Master"}
+function toast(m){var t=$("toast");t.textContent=m;t.className="toast on";clearTimeout(toast.t);toast.t=setTimeout(function(){t.className="toast"},2000)}
+function copy(s,b){var ok=function(){var o=b.textContent;b.textContent="Copied ✓";toast("প্রম্পট কপি হয়েছে। এবার Consensus AI-তে পেস্ট করুন");setTimeout(function(){b.textContent=o},1600)};
+function fb(){var t=document.createElement("textarea");t.value=s;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(x){b.textContent="Copy হয়নি"}document.body.removeChild(t)}
+if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(ok,fb);else fb()}
+function burst(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;for(var i=0;i<32;i++){var s=document.createElement("i");s.className="cf";s.style.cssText="left:"+Math.random()*100+"vw;background:hsl("+(36+Math.random()*14)+" 75% "+(45+Math.random()*25)+"%);animation-delay:"+Math.random()*.4+"s";document.body.appendChild(s);setTimeout(function(x){return function(){x.remove()}}(s),2400)}}
+function render(){
+var q=$("q").value.trim().toLowerCase(),h="",dn=0,ch='<button class="chip'+(pf==="all"?" on":"")+'" data-p="all">সব</button>';
+all.forEach(function(c){if(done[c.id])dn++});
+D.forEach(function(p,pi){var n=p.c.length,d=0;p.c.forEach(function(c){if(done[c.id])d++});var full=d===n;
+if(prevC[pi]===false&&full){burst();toast("🎉 "+pshort(pi)+" সম্পন্ন!")}prevC[pi]=full;
+ch+='<button class="chip'+(pf===""+pi?" on":"")+'" data-p="'+pi+'">'+(full?"✓ ":"")+pshort(pi)+'<small>'+d+'/'+n+'</small></button>';
+if(pf!=="all"&&pf!==""+pi)return;var s="";
+p.c.forEach(function(c){if(q&&(c.h+c.bn+txt(c)).toLowerCase().indexOf(q)<0)return;var o=!!open[c.id];
+s+='<div class="card'+(done[c.id]?" done":"")+'" id="c-'+c.id+'"><div class="ch"><span class="n">'+c.id.replace("M","P")+'</span><div><b class="hd">'+c.h+'</b><span class="pu">'+c.bn+'</span></div></div><div class="acts"><button data-a="o" aria-expanded="'+o+'">'+(o?"প্রশ্নগুলো লুকান":"প্রশ্নগুলো দেখুন")+'</button><button class="cp" data-a="c">Copy Prompt</button><button class="dn" data-a="d" aria-pressed="'+!!done[c.id]+'">'+(done[c.id]?"✓ সম্পন্ন":"সম্পন্ন করুন")+'</button></div>'+(o?body(c):"")+'</div>'});
+if(s)h+='<section style="--h:'+HUE[pi]+'"><div class="ph"><h2>'+p.p+'</h2><p>'+p.bn+'</p><div class="pbar"><i style="width:'+(d/n*100)+'%"></i></div></div>'+s+'</section>'});
+ch+='<button class="chip ex" data-p="ex">'+(ex?"সব বন্ধ করুন":"সব খুলুন")+'</button>';
+$("chips").innerHTML=ch;
+$("out").innerHTML=h||'<p class="empty">কোনো প্রম্পট মেলেনি। অন্য শব্দ দিয়ে খুঁজুন।</p>';
+$("ptxt").textContent=dn+"/"+all.length+" সম্পন্ন";$("pbar").style.width=(dn/all.length*100)+"%";
+$("ring").style.strokeDashoffset=214*(1-dn/all.length);$("pct").textContent=Math.round(dn/all.length*100)+"%";$("hdn").textContent=dn+" / "+all.length;
+var nx=all.filter(function(c){return !done[c.id]})[0];$("nxt").textContent=nx?"▶ পরের: "+nx.h.split(" — ")[0]:"🎉 সব সম্পন্ন";$("nxt").dataset.id=nx?nx.id:""}
+$("chips").onclick=function(e){var b=e.target.closest(".chip");if(!b)return;var p=b.dataset.p;if(p==="ex"){ex=!ex;all.forEach(function(c){open[c.id]=ex})}else pf=p;render()};
+$("nxt").onclick=function(){var id=this.dataset.id;if(!id)return;pf="all";$("q").value="";open[id]=true;render();var el=$("c-"+id);el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash")};
+document.addEventListener("keydown",function(e){if(e.key==="/"&&document.activeElement!==$("q")){e.preventDefault();$("q").focus()}});
+render();
+</script></body></html>
